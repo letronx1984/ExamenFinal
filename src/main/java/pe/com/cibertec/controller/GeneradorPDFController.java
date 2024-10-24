@@ -29,7 +29,7 @@ public class GeneradorPDFController {
 		
 		for(Pedido ped : productoSesion{
 			DetallePedidoEntity det = new DetallePedidoEntity();
-			
+			ProductoEntity
 		}
 	}
 	
