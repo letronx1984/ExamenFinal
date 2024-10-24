@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Inicio</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.0/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container">
+			
+			<span class="navbar-text">
+				Bienvenido, <span th:text="${nombreUsuario}"></span>
+			</span>
+			<div class="ml-auto">
+				<a th:href="@{/logout}" class="btn btn-danger">Cerrar sesión</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container mt-4">
+		<div class="d-flex justify-content-between">
+			<div>
+				<h2>Lista de Productos</h2>
+				<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#agregarProductoModal">
+					Agregar Producto
+				</button>
+				<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#agregarCategoriaModal">
+					Agregar Categoría
+				</button>
+			</div>
+			<div>
+				<a th:href="@{/generarPDF}" class="btn btn-primary">Generar PDF</a>
+			</div>
+		</div>
+		
+		<table class="table mt-4">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Nombre producto</th>
+					<th>Precio</th>
+					<th>Stock</th>
+					<th>Categoria</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="producto : ${listaProductos}">
+					<td th:text="${producto.id}"></td>
+					<td th:text="${producto.nombreProducto}"></td>
+					<td th:text="${producto.precio}"></td>
+					<td th:text="${producto.stock}"></td>
+					<td th:text="${producto.categoriaEntity.nombreCategoria}"></td>
+					<td>
+						<a th:href="@{/productos/verProducto/{id}(id=${producto.id})}" class="btn btn-info">Ver</a>
+						<a th:href="@{/productos/editarProducto/{id}(id=${producto.id})}" class="btn btn-info">Editar</a>
+						<a th:href="@{/productos/eliminarProducto/{id}(id=${producto.id})}" class="btn btn-danger">Eliminar</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="modal fade" id="agregarProductoModal" tabindex="-1" aria-labelledby="agregarProductoModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="agregarProductoModalLabel">Agregar Producto</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form th:action="@{/productos/registroProducto}" method="post">
+						<div class="form-group">
+							<label for="nombreProducto">Nombre del Producto</label>
+							<input type="text" class="form-control" id="nombreProducto" name="nombreProducto" required>
+						</div>
+						<div class="form-group">
+							<label for="precio">Precio</label>
+							<input type="number" class="form-control" id="precio" name="precio" step="0.01" required>
+						</div>
+						<div class="form-group">
+							<label for="stock">Stock</label>
+							<input type="number"class="form-control" id="stock" name="stock" required>
+						</div>
+						<div class="form-group">
+							<label for="categoriaEntity">Categoría</label>
+							<select class="form-control" id="categoriaEntity" name="categoriaEntity"> 
+								<option th:each="categoria : ${listaCategoria}" 
+											th:value="${categoria.idCategoria}" 
+											th:text="${categoria.nombreCategoria}">
+								
+								</option>
+							</select>
+						</div>
+						<button type="submit" class="btn btn-primary">Guardar</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="agregarCategoriaModal" tabindex="-1" aria-labelledby="agregarCategoriaModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="agregarCategoria">Agregar Categoría</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form th:action="@{/agregarCategoria}" method="post">
+						<div class="form-group">
+							<label for="nombreCategoria">Nombre de la Categoria</label>
+							<input type="text" class="form-control" id="nombreCategoria" name="nombreCategoria" required>
+						</div>
+						<button type="submit" class="btn btn-primary">Guardar</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
